@@ -1,5 +1,10 @@
 from django.db import models
 from django.utils import timezone
+from django.urls import reverse
+
+
+def image_path(instance, filename):
+    return os.path.join('uploads/coins/', str(instance.some_identifier),'/', 'filename.ext')
 
 # Create your models here.
 class Coin(models.Model):
@@ -8,27 +13,43 @@ class Coin(models.Model):
 		('VG','Хорошее'),
 		('BD','Плохое')
 	)
-	owner = models.ForeignKey('auth.User')
-	country = models.CharField(max_length=128)
-	value = models.CharField(max_length=128)
-	year = models.CharField(max_length=4)
-	specific = models.CharField(max_length=255)
-	inuse = models.BooleanField(default=False)
-	haveit = models.BooleanField(default=True)
-	condition = models.CharField(
+
+	owner = models.ForeignKey('auth.User',on_delete=models.CASCADE)
+	country = models.CharField("Страна", max_length=128)
+	value = models.CharField("Номинал",max_length=128)
+	year = models.CharField("Год на монете",max_length=4)
+	specific = models.CharField("Особенности", max_length=255, blank=True)
+	inuse = models.BooleanField("Хождение",default=False)
+	haveit = models.BooleanField("В коллекции",default=True)
+	condition = models.CharField("Состояние",
 		max_length = 2,
 		choices = COND_CHOICES,
 		default = 'VG'
 	)
-	avers = models.ImageField(upload_to = 'uploads/')
-	revers = models.ImageField(upload_to = 'uploads/')
-	comment = models.CharField(max_length=255)
+	avers = models.ImageField("Аверс",upload_to = 'uploads/',blank=True)
+	revers = models.ImageField("Реверс",upload_to = 'uploads/',blank=True)
+	comment = models.CharField("Комментарии",max_length=255, blank=True)
 	created_date = models.DateTimeField(
 		default = timezone.now)
 	
+	
 	def __str__(self):
 		return self.value+' '+self.year
+	def title(self):
+		return str(self)
+	def url(self):
+		return ''+str(self.id)
+	def get_absolute_url(self):
+		return reverse('list',kwargs={})
+	def tags(self):
+		return (self.value + \
+		' ' + self.year + \
+		' ' + self.country + \
+		' ' + self.specific + \
+		' ' + self.comment + \
+		' ' + self.get_condition_display() + \
+		' ' + {False:'нет',True:'есть'}[self.haveit]).lower()
 
 
 
-
+ 

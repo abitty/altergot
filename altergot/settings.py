@@ -15,6 +15,27 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# путь до папки media, в общем случае она пуста в начале
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/' # для медии в шаблонах
+
+# пустая папка, сюда будет собирать статику collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#урл для шаблонов
+STATIC_URL = '/static/' 
+
+STATICFILES_DIRS = [
+	os.path.join(BASE_DIR, "assets"),
+]
+   
+
+# "Поисковики" статики. Первый ищет статику в STATICFILES_DIRS,
+# второй в папках приложений.
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -125,6 +146,4 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.11/howto/static-files/
-
-STATIC_URL = '/static/'
+# https://docs.djangoproject.com/en/1.11/howto/static-files/"
