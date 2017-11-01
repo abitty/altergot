@@ -26,6 +26,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
 	os.path.join(BASE_DIR, "assets"),
+	os.path.join(BASE_DIR, "templates"),
 ]
    
 
@@ -76,7 +77,7 @@ ROOT_URLCONF = 'altergot.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates',],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

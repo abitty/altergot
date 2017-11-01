@@ -49,7 +49,12 @@ class Coin(models.Model):
 		' ' + self.comment + \
 		' ' + self.get_condition_display() + \
 		' ' + {False:'нет',True:'есть'}[self.haveit]).lower()
-
-
+	def condition_text(self):
+		result = None
+		for k,v in self.COND_CHOICES:
+			if k == self.condition:
+				result = v
+		return result
+	
 
  
