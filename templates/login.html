@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+<html lang="ru">
+<head>
+{% block fancy_js_css %}{% endblock %}
+</head>
+
+<body>
+{% block content %}
+<form method="post">
+{% csrf_token %}
+  <div class="form-group row">
+    <label for="inputLogin" class="col-sm-2 col-form-label">Логин</label>
+    <div class="col-sm-4">
+      <!--input type="text" class="form-control" id="inputLogin" placeholder="логин"-->
+	  {{form.username}}
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 col-form-label">Пароль</label>
+    <div class="col-sm-4">
+      <!--input type="password" class="form-control" id="inputPassword" placeholder="пароль"-->
+	  {{ form.password }}
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Войти</button>
+</form>
+
+{% endblock %}
+
+</body>
+</html>

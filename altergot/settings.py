@@ -19,6 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/' # для медии в шаблонах
 
+LOGIN_URL = '/login/'
+
 # пустая папка, сюда будет собирать статику collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 #урл для шаблонов
@@ -26,7 +28,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
 	os.path.join(BASE_DIR, "assets"),
-	os.path.join(BASE_DIR, "templates"),
+	os.path.join(BASE_DIR, "templates/images/"),
 ]
    
 

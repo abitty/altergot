@@ -1,14 +1,9 @@
+{% extends "base.html" %}
 {% load static %}
 
 <html lang="ru">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<script src = "{% static "jquery/jquery-3.2.1.slim.min.js" %}"></script>
-<link href="{% static "/bootstrap/css/bootstrap.min.css"%}" rel="stylesheet">
-<script src="{% static "/bootstrap/js/bootstrap.min.js" %}"></script>
 </head>
-
-
 
 {% block content %}
 <div class="container-fluid">
@@ -35,12 +30,11 @@
 </nav>
 
 {% for field in form %}
-
 <div class="row justify-content-center my-3">
 	<div class="col-sm-2">
 		{{field.label}}
 	</div>
-	<div class="col-sm-6">
+	<div class="col-sm-8">
 		{{field}}
 	</div>
 </div>
@@ -48,10 +42,7 @@
 <p> Форма пуста </p>
 {% endfor %}
 </form>
-
 </div>
-
-
 {% endblock %}
 
 

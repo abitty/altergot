@@ -1,16 +1,9 @@
-{% load static %}
+{% extends "base.html" %}
 
 <html lang="ru">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<script src = "{% static "jquery/jquery-3.2.1.slim.min.js" %}"></script>
-<script src = "{% static "popper/popper.min.js" %}"></script>
-<link href="{% static "/bootstrap/css/bootstrap.min.css"%}" rel="stylesheet">
-<script src="{% static "/bootstrap/js/bootstrap.min.js" %}"></script>
-<script type="text/javascript" src="{% static '/fancybox/jquery.fancybox.min.js' %}"></script>
-<link rel="stylesheet" href="{% static '/fancybox/jquery.fancybox.min.css' %}" type="text/css" media="screen" />
-<script type="text/javascript">
 
+<script type="text/javascript">
 function startsearch(mode) {
 	$('<input />').attr('type', 'hidden')
           .attr('name', "h")
@@ -19,92 +12,60 @@ function startsearch(mode) {
 	$('form#form_search').submit();
 
 }
-
-$(document).ready( function() {
-$("[data-fancybox]").fancybox({
-	loop : true,
-	lang : "ru",
-	autoSize: "true",
-	i18n : {
-        'ru' : {
-            CLOSE       : 'Закрыть',
-            NEXT        : 'Вперёд',
-            PREV        : 'Назад',
-            ERROR       : 'Содержание не может быть загружено.',
-            PLAY_START  : 'Начать проигрывание',
-            PLAY_STOP   : 'Пауза',
-            FULL_SCREEN : 'Плный экран',
-            THUMBS      : 'Галерея'
-			},
-        },
-	buttons : [
-        'close'
-    ],
-	});
-})
 </script>
 
-<style type="text/css">
-		.fancybox-container {
-			box-shadow: 0 0 50px #222;
-			width: 100%;
-			height: 100%;
-			/*margin: 10%;*/
-		}
-</style>
 </head>
 
 <body>
 {% block content %}
 
 <div class="container-fluid">
+	<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="#">Монеты</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
 
-
-<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
-	<a class="navbar-brand" href="#">Монеты</a>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    	<span class="navbar-toggler-icon"></span>
-  	</button>
-
-	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-    	<ul class="navbar-nav mr-auto">
-     		<li class="nav-item">
-        		<a class="nav-link" href="{{BASE_URL}}/coins/create">Добавить</a>
-      		</li>
-   		</ul>
-   		<form class="form-inline my-2 my-sm-0" method="get" action="{% url 'filtered' %}" id="form_search">
-			<div class="input-group">
-				{% if after_search %}
-				<a href="{{BASE_URL}}/coins"><span class="input-group-addon" id="basic-addon1">X</span></a>
-				{% endif %}
-				<input type="text" class="form-control" placeholder="номинал" aria-label="Search for..." name="v" id="id_v" value="{{sv}}">
-				<input type="text" class="form-control" placeholder="год" aria-label="Search for..." name="y" id="id_y" value="{{sy}}">
-				<input type="text" class="form-control" placeholder="особенности" aria-label="Search for..." name="q" id="id_q" value="{{sq}}">
-				<div class="btn-group bg-light">
-  					<button class="btn btn-secondary btn-sm" type="submit">Поиск</button>
-					
-					<button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLink">
-    					<span class="sr-only">Toggle Dropdown</span>
-  					</button>
-					<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" aria-labelledby="dropdownMenuLink" style="position: absolute; transform: translate3d(-66px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
-						<a class="dropdown-item" href="#" id="id_findexist" onclick="startsearch(1)">Поиск в коллекции</a>
-						<a class="dropdown-item" href="#" id="id_findwanted" onclick="startsearch(0)">Поиск в хотелках</a>
- 					</div>
-					
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="{{BASE_URL}}/coins/create">Добавить</a>
+				</li>
+				{% if user.is_authenticated %}
+				<li class="nav-item">
+					<a class="nav-link" href="{{BASE_URL}}/logout/">Выход ({{user.username}})</a>
+				</li>
+				{% else %}
+				<li class="nav-item">
+					<a class="nav-link" href="{{BASE_URL}}/login/?next=/coins/">Войти</a>
+				</li>
+				{% endif%}
+				
+			</ul>
+			<form class="form-inline my-2 my-sm-0" method="get" action="{% url 'filtered' %}" id="form_search">
+				<div class="input-group">
+					{% if after_search %}
+					<a href="{{BASE_URL}}/coins"><span class="input-group-addon" id="basic-addon1">X</span></a>
+					{% endif %}
+					<input type="text" class="form-control" placeholder="номинал" aria-label="Search for..." name="v" id="id_v" value="{{sv}}">
+					<input type="text" class="form-control" placeholder="год" aria-label="Search for..." name="y" id="id_y" value="{{sy}}">
+					<input type="text" class="form-control" placeholder="особенности" aria-label="Search for..." name="q" id="id_q" value="{{sq}}">
+					<div class="btn-group bg-light">
+						<button class="btn btn-secondary btn-sm" type="submit">Поиск</button>
+						
+						<button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLink">
+							<span class="sr-only">Toggle Dropdown</span>
+						</button>
+						<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" aria-labelledby="dropdownMenuLink" style="position: absolute; transform: translate3d(-66px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+							<a class="dropdown-item" href="#" id="id_findexist" onclick="startsearch(1)">Поиск в коллекции</a>
+							<a class="dropdown-item" href="#" id="id_findwanted" onclick="startsearch(0)">Поиск в хотелках</a>
+						</div>
+						
+					</div>
 				</div>
-	
-
-
-
-			</div>
-    	</form>
-	</div>
-</nav>
-
-
-
-
-
+			</form>
+		</div>
+	</nav>
 
 {% if object_list %}
 {% for coin in object_list %}
@@ -113,9 +74,6 @@ $("[data-fancybox]").fancybox({
 	<!--div class="card-group"-->
 `	<div class="row">
 	{% endif%}
-
-
-
 		<div class="col-md-3">
 		<div class="card bg-light border border-secondary rounded m-1">
 			<div class="card-body">
@@ -139,7 +97,6 @@ $("[data-fancybox]").fancybox({
 			{% endif %}
 		</div>
 		</div>
-
 	{% if cardnum == 'cL' %}
 	</div>
 	{% endif %}
@@ -148,14 +105,13 @@ $("[data-fancybox]").fancybox({
 </div>
 {% endif %}
 
-
 {% else %}
     {% if after_search %}
     <p>Нет монет</p>
     {% endif %}
 {% endif %}
 </div>
-{% endblock %}
+{% endblock content %}
 
 </body>
 </html>

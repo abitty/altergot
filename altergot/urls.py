@@ -24,7 +24,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^coins/', include('coins.urls')),
 	url(r'', include('idxpage.urls')),
-	url(r'^accounts/login/$', auth_views.LoginView.as_view()),
+	url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'),name='login'),
+	url(r'^logout/$', auth_views.LogoutView.as_view(template_name='logout.html')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
