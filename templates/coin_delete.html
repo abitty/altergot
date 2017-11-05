@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+<html lang="ru">
+<head>
+{% block fancy_js_css%}{% endblock%}
+</head>
+
+{% block content %}
+<div class="container-fluid">
+
+<form action="" method="post">
+{% csrf_token %}
+    <p>Удалить "{{ object }}"?</p>
+    <input type="submit" value="Удалить" />
+</form>
+
+{% endblock %}
+
+
+	
