@@ -49,7 +49,7 @@ SECRET_KEY = 'nq*ttx%pl^lw%tmlq$&tz&7qex2#)u(b=a+@re2gchi94sgooc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['.altergot.ru']
+ALLOWED_HOSTS = ['159.253.22.76']
 
 
 # Application definition
