@@ -15,6 +15,10 @@ class Country(models.Model):
 	class Meta:
 		verbose_name = "Страна"
 		verbose_name_plural = "Страны"
+		indexes = [
+			models.Index(fields=['country']),
+		]
+		
 	
 	
 # Create your models here.
@@ -33,13 +37,9 @@ class Coin(models.Model):
 	year = models.CharField("Год на монете",max_length=4)
 	specific = models.CharField("Особенности", max_length=255, blank=True)
 	inuse = models.BooleanField("Хождение",default=False)
-	state = models.CharField
 	haveit = models.BooleanField("В коллекции",default=True)
-	condition = models.CharField("Состояние",
-		max_length = 2,
-		choices = COND_CHOICES,
-		default = 'VG'
-	)
+	special = models.BooleanField("Памятная",default=False)
+	condition = models.CharField("Состояние", default = 'VG', max_length = 2,choices = COND_CHOICES)
 	avers = models.ImageField("Аверс",upload_to = 'uploads/',blank=True)
 	revers = models.ImageField("Реверс",upload_to = 'uploads/',blank=True)
 	comment = models.CharField("Комментарии",max_length=255, blank=True)
