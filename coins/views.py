@@ -12,6 +12,8 @@ from django import forms
 from django.forms import ModelChoiceField
 from django.urls import reverse
 
+
+
 # Create your views here.
 
 def normalize_query(query_string,
@@ -73,6 +75,7 @@ def do_search(request):
 	empty_request = True
 	s = ''
 	sy = '';
+	print('QueryDict=',request.GET)
 	if ('y' in request.GET):
 		sy = request.GET['y']
 	if sy:
@@ -120,6 +123,7 @@ def do_search(request):
 	if where:
 		sql_str += " WHERE "+where 
 	if not empty_request:
+		sql_str += ' ORDER BY `year`,`value`'
 		found_items = Coin.objects.raw(sql_str)
 	return {'sc':sc, 'sy': sy, 'sv':sv, 'sq': sq, 'object_list': found_items,'after_search': not empty_request}
 	
@@ -132,6 +136,7 @@ class CoinsListView(ListView):
 	
 	def get(self, request):
 		found_items= do_search(request)
+		self.model.set_last_query(self.model,request.GET)
 		if found_items['sc']:
 			form = self.form_class(initial={'country':found_items['sc']})
 			self.model.set_lc(self.model,found_items['sc'])
@@ -154,9 +159,10 @@ class CoinUpdate(UpdateView):
 		'comment':Textarea(attrs={'cols':160, 'rows':40}),
 	}
 	def get_success_url(self):
-		lc = self.model.get_lc(self.model)
-		print ("reverse:",lc);
-		return reverse('sel');
+		qd = self.request.GET
+		qd = self.model.get_last_query(self.model)
+		lc = reverse('sel')+'?'+qd.urlencode(safe='/')
+		return lc
 		#return model.get_absolute_path()
 
 @method_decorator(login_required,'dispatch')
