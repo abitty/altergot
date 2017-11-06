@@ -70,14 +70,13 @@ function startsearch(mode) {
 		</div>
 	</nav>
 
-{% if object_list %}
 {% for coin in object_list %}
-{% cycle 'cF' 'c2' 'c3' 'cL' as cardnum silent %}
+	{% cycle 'cF' 'c2' 'c3' 'cL' as cardnum silent %}
 	{% if cardnum ==  'cF'  %}
 	<!--div class="card-group"-->
 `	<div class="row">
 	{% endif%}
-		<div class="col-md-3">
+	<div class="col-md-3">
 		<div class="card bg-light border border-secondary rounded m-1">
 			<div class="card-body">
 				<div class = "row">
@@ -89,28 +88,27 @@ function startsearch(mode) {
 					<div class = "col-6">{% if coin.revers %}<a  data-fancybox="grp{{ forloop.counter }}" href="{{coin.revers.url}}" data-caption="{{coin.title}}"><img src="{{coin.revers.url}}" width="60" height="60" alt="{{coin.title}} - реверс"/></a>{% endif %}</div>
 				</div>
 			</div>
-			{% firstof coin.comment not coin.haveit coin.country as more_info %}
+			{% firstof coin.comment coin.special not coin.haveit coin.country as more_info %}
 			{% if more_info %}
 			<div class="card-footer">
 				<p class="mb-0"><small class="text-muted">{{coin.condition_text}} состояние</small></p> 
-   				{% if not coin.haveit %} <p class="mb-0"><small class="text-muted">Нет в коллекции</small></p> {% endif %}
- 				{% if coin.comment %} <p class="mb-0"> <small class="text-muted">{{coin.comment}}</small></p> {% endif %}
-   			</div>
+				{% if coin.special %} <p class="mb-0"><small class="text-muted">Памятная</small></p> {% endif %}
+				{% if not coin.haveit %} <p class="mb-0"><small class="text-muted">Нет в коллекции</small></p> {% endif %}
+				{% if coin.comment %} <p class="mb-0"> <small class="text-muted">{{coin.comment}}</small></p> {% endif %}
+			</div>
 			{% endif %}
 		</div>
-		</div>
+	</div>
 	{% if cardnum == 'cL' %}
 	</div>
+	{% endif %}
+{% empty %}	
+	{% if after_search %}
+	<p>Ничего не нашлось</p>
 	{% endif %}
 {% endfor %}
 {% if cardnum != 'cL' %}
 </div>
-{% endif %}
-
-{% else %}
-    {% if after_search %}
-    <p>Нет монет</p>
-    {% endif %}
 {% endif %}
 </div>
 {% endblock content %}

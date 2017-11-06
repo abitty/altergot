@@ -40,7 +40,7 @@ class CoinForm(forms.ModelForm):
 	class Meta(object):
 		model = Coin
         #exclude = ('status',)
-		fields = ['country','value','year','specific','inuse','haveit','condition','avers','revers','comment']
+		fields = ['country','value','year','inuse','haveit','special','specific','specific','condition','avers','revers','comment']
 		
 		
 class SearchForm(forms.ModelForm):
@@ -139,7 +139,7 @@ class CoinsListView(ListView):
 		self.model.set_last_query(self.model,request.GET)
 		if found_items['sc']:
 			form = self.form_class(initial={'country':found_items['sc']})
-			self.model.set_lc(self.model,found_items['sc'])
+			#self.model.set_lc(self.model,found_items['sc'])
 		else:
 			form = self.form_class()
 		found_items['form'] = form
@@ -194,7 +194,10 @@ class CoinDelete(DeleteView):
 	fields = ['coin_id','country','value','year']
 	
 	def get_success_url(self):
-		return reverse('sel');
+		qd = self.request.GET
+		qd = self.model.get_last_query(self.model)
+		lc = reverse('sel')+'?'+qd.urlencode(safe='/')
+		return lc
 	
 
 

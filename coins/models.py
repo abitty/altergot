@@ -31,7 +31,6 @@ class Coin(models.Model):
 	)
 
 	owner = models.ForeignKey('auth.User',on_delete=models.CASCADE)
-	#country = models.CharField('Страна',max_length=128, blank=True)
 	country = models.ForeignKey(Country,on_delete=models.CASCADE)
 	value = models.CharField("Номинал",max_length=128)
 	year = models.CharField("Год на монете",max_length=4)
@@ -47,13 +46,7 @@ class Coin(models.Model):
 		default = timezone.now)
 		
 		
-	last_country = None
 	last_query = ()
-	def set_lc(self, value):
-		last_country = value
-	def get_lc(self):
-		return self.last_country
-	
 	class Meta:
 		verbose_name = "Монета"
 		verbose_name_plural = "Монеты"
