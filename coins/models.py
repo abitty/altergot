@@ -46,6 +46,7 @@ class Coin(models.Model):
 		
 		
 	last_country = None
+	last_query = ()
 	def set_lc(self, value):
 		last_country = value
 	def get_lc(self):
@@ -54,13 +55,16 @@ class Coin(models.Model):
 	class Meta:
 		verbose_name = "Монета"
 		verbose_name_plural = "Монеты"
+		indexes = [
+			models.Index(fields=['year', 'value']),
+		]
 	
 	def __str__(self):
 		return self.value+' '+self.year
 	def title(self):
 		return str(self)
 	def url(self):
-		return ''+str(self.id)+'?country='+str(self.country_id)
+		return ''+str(self.id)
 	def get_absolute_url(self):
 		return reverse('list',kwargs={})
 	def tags(self):
@@ -77,6 +81,10 @@ class Coin(models.Model):
 			if k == self.condition:
 				result = v
 		return result
+	def set_last_query(self, lq):
+		self.last_query = lq
+	def get_last_query(self):
+		return self.last_query 
 		
 		
 from django.contrib import admin

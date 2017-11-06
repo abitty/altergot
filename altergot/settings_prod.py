@@ -18,6 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # путь до папки media, в общем случае она пуста в начале
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/' # для медии в шаблонах
+FILE_UPLOAD_PERMISSIONS = 0o644
 
 LOGIN_URL = '/login/'
 
@@ -49,7 +50,7 @@ SECRET_KEY = 'nq*ttx%pl^lw%tmlq$&tz&7qex2#)u(b=a+@re2gchi94sgooc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['159.253.22.76']
+ALLOWED_HOSTS = ['.altergot.ru']
 
 
 # Application definition
