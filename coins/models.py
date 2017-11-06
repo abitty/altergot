@@ -22,6 +22,7 @@ class Coin(models.Model):
 	COND_CHOICES = (
 		('MN','Отличное'),
 		('VG','Хорошее'),
+		('MD', 'Среднее'),
 		('BD','Плохое')
 	)
 
@@ -32,6 +33,7 @@ class Coin(models.Model):
 	year = models.CharField("Год на монете",max_length=4)
 	specific = models.CharField("Особенности", max_length=255, blank=True)
 	inuse = models.BooleanField("Хождение",default=False)
+	state = models.CharField
 	haveit = models.BooleanField("В коллекции",default=True)
 	condition = models.CharField("Состояние",
 		max_length = 2,
