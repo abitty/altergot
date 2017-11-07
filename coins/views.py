@@ -67,67 +67,6 @@ class CoinDeleteForm(forms.ModelForm):
         #exclude = ('status',)
 		fields = ['country','value','year']
 		
-	
-
-def do_search(request):
-	found_items = None
-	where = '' 
-	empty_request = True
-	s = ''
-	sy = '';
-	print('QueryDict=',request.GET)
-	if ('y' in request.GET):
-		sy = request.GET['y']
-	if sy:
-		where = "`year` LIKE '"+sy+"%%'"
-		empty_request = False
-	
-	sv = '';
-	if 'v' in request.GET:
-		sv = request.GET['v']
-	if sv:
-		if where:
-			where = ' AND '.join([where,"`value` LIKE '"+sv+"%%'"])
-		else:
-			where = "`value` LIKE '"+sv+"%%'"
-		empty_request = False
-		
-	sq = ''
-	if 'q' in request.GET:
-		sq = request.GET['q']
-	if sq:
-		if where:
-			where = ' AND '.join([where,"(`comment` LIKE '%%"+sq+"%%' OR `specific` LIKE '%%"+sq+"%%')"])
-		else:
-			where = "(`comment` LIKE '%%"+sq+"%%' OR `specific` LIKE '%%"+sq+"%%')"
-		empty_request = False
-	s = ''
-	if 'h' in request.GET:
-		s = request.GET['h']
-	if s:
-		if where:
-			where = ' AND '.join([where, '`haveit`='+s])
-		else:
-			where = '`haveit`='+s
-		empty_request = False
-	sc = ''
-	if 'country' in request.GET:
-		sc = request.GET['country']
-	if sc:
-		if where:
-			where = ' AND '.join([where, '`country_id`='+sc])
-		else:
-			where = '`country_id`='+sc
-		empty_request = False
-	sql_str = "SELECT * FROM `coins_coin`"
-	if where:
-		sql_str += " WHERE "+where 
-	if not empty_request:
-		sql_str += ' ORDER BY `year`,`value`'
-		found_items = Coin.objects.raw(sql_str)
-	return {'sc':sc, 'sy': sy, 'sv':sv, 'sq': sq, 'object_list': found_items,'after_search': not empty_request}
-	
-	
 # просмотр списка
 class CoinsListView(ListView):
 	model = Coin
@@ -135,11 +74,10 @@ class CoinsListView(ListView):
 	form_class = SearchForm
 	
 	def get(self, request):
-		found_items= do_search(request)
-		self.model.set_last_query(self.model,request.GET)
+		found_items= self.model.do_search(self.model,request)
 		if found_items['sc']:
-			form = self.form_class(initial={'country':found_items['sc']})
-			#self.model.set_lc(self.model,found_items['sc'])
+			#form = self.form_class(initial={'country':found_items['sc']})
+			form = self.form_class(initial=request.GET)
 		else:
 			form = self.form_class()
 		found_items['form'] = form
