@@ -81,6 +81,55 @@ class Coin(models.Model):
 	def get_last_query(self):
 		return self.last_query 
 		
+	def do_search(self,request):
+		self.set_last_query(self,request.GET)
+		found_items = None
+		where = '' 
+		empty_request = True
+		sy = '';
+		prefix = ' WHERE '
+		sy = request.GET.get('y','')
+		if sy:
+			where = prefix.join([where,"`year` LIKE '"+sy+"%%'"])
+			empty_request = False
+			prefix = ' AND '
+	
+		sv = request.GET.get('v','');
+		if sv:
+			where = prefix.join([where,"`value` LIKE '"+sv+"%%'"])
+			empty_request = False
+			prefix = ' AND '
+		
+		sq = request.GET.get('q','');
+		if sq:
+			where = prefix.join([where,"(`comment` LIKE '%%"+sq+"%%' OR `specific` LIKE '%%"+sq+"%%')"])
+			empty_request = False
+			prefix = ' AND '
+			
+		s = request.GET.get('h','')
+		if s:
+			where = prefix.join([where, '`haveit`='+s])
+			empty_request = False
+			prefix = ' AND '
+			
+		sc = request.GET.get('country','')
+		if sc:
+			where = prefix.join([where, '`country_id`='+sc])
+			empty_request = False
+			prefix = ' AND '
+			
+		sql_str = "SELECT * FROM `coins_coin`"
+		if where:
+			sql_str += where 
+		if not empty_request:
+			sql_str += ' ORDER BY `year`,`value`'
+			print ("SQL:",sql_str)
+			found_items = Coin.objects.raw(sql_str)
+		return {'sc':sc, 'sy': sy, 'sv':sv, 'sq': sq, 'object_list': found_items,'after_search': not empty_request}
+		
+			
+		
+		
 		
 from django.contrib import admin
 admin.site.register(Country)		
