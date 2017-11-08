@@ -20,6 +20,32 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/' # для медии в шаблонах
 FILE_UPLOAD_PERMISSIONS = 0o644
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+
+THUMBNAIL_FORMAT = 'JPEG'
+THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
+THUMBNAIL_REDIS_HOST = 'localhost' # default
+THUMBNAIL_REDIS_PORT = 6379 # default
+
+
+"""
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+"""
+
+
 LOGIN_URL = '/login/'
 
 # пустая папка, сюда будет собирать статику collectstatic
@@ -50,6 +76,8 @@ SECRET_KEY = 'nq*ttx%pl^lw%tmlq$&tz&7qex2#)u(b=a+@re2gchi94sgooc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+THUMBNAIL_DEBUG = DEBUG
+
 ALLOWED_HOSTS = ['.altergot.ru']
 
 
@@ -62,6 +90,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	'sorl.thumbnail',
     'coins',
 ]
 
@@ -83,6 +112,7 @@ TEMPLATES = [
         'DIRS': ['templates',],
         'APP_DIRS': True,
         'OPTIONS': {
+			'debug': DEBUG,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
