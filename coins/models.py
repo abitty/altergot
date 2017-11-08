@@ -3,8 +3,8 @@ from django.utils import timezone
 from django.urls import reverse
 
 
-#def image_path(instance, filename):
-#    return os.path.join('uploads/coins/', str(instance.some_identifier),'/', 'filename.ext')
+def image_path(instance, filename):
+    return os.path.join('uploads/coins/', str(instance.some_identifier),'/', 'filename.ext')
 
 class Country(models.Model):
 	country = models.CharField("Страна", max_length=128, blank=False)
@@ -33,7 +33,7 @@ class Coin(models.Model):
 	owner = models.ForeignKey('auth.User',on_delete=models.CASCADE)
 	country = models.ForeignKey(Country,on_delete=models.CASCADE)
 	value = models.CharField("Номинал",max_length=128)
-	year = models.CharField("Год на монете",max_length=4)
+	year = models.CharField("Год на монете",max_length=64, blank=True)
 	specific = models.CharField("Особенности", max_length=255, blank=True)
 	inuse = models.BooleanField("Хождение",default=False)
 	haveit = models.BooleanField("В коллекции",default=True)
@@ -125,7 +125,7 @@ class Coin(models.Model):
 			sql_str += ' ORDER BY `year`,`value`'
 			print ("SQL:",sql_str)
 			found_items = Coin.objects.raw(sql_str)
-		return {'sc':sc, 'sy': sy, 'sv':sv, 'sq': sq, 'object_list': found_items,'after_search': not empty_request}
+		return {'sc':sc, 'sy': sy, 'sv':sv, 'sq': sq, 'object_list': found_items,'after_search': not empty_request,'count':len(list(found_items))}
 		
 			
 		
