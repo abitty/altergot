@@ -3,8 +3,8 @@ from django.utils import timezone
 from django.urls import reverse
 
 
-def image_path(instance, filename):
-    return os.path.join('uploads/coins/', str(instance.some_identifier),'/', 'filename.ext')
+#def image_path(instance, filename):
+#    return os.path.join('uploads/coins/', str(instance.some_identifier),'/', 'filename.ext')
 
 class Country(models.Model):
 	country = models.CharField("Страна", max_length=128, blank=False)

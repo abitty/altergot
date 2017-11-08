@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load thumbnail %}
 <html lang="ru">
 <head>
 {% block fancy_js_css %}
@@ -69,14 +70,15 @@ function startsearch(mode) {
 			</form>
 		</div>
 	</nav>
+	
 
 {% for coin in object_list %}
-	{% cycle 'cF' 'c2' 'c3' 'cL' as cardnum silent %}
+	{% cycle 'cF' 'c2' 'cL' as cardnum silent %}
 	{% if cardnum ==  'cF'  %}
 	<!--div class="card-group"-->
-`	<div class="row">
+	<div class="row">
 	{% endif%}
-	<div class="col-md-3">
+	<div class="col-md-4">
 		<div class="card bg-light border border-secondary rounded m-1">
 			<div class="card-body">
 				<div class = "row">
@@ -84,8 +86,24 @@ function startsearch(mode) {
 					<div class = "col-sm">{% if coin.specific %}<small class="text-muted">{{coin.specific}}</small>{% endif %}</div>
 				</div>
 				<div class = "row">
-					<div class = "col-6">{% if coin.avers %}<a  data-fancybox="grp{{ forloop.counter }}" href="{{coin.avers.url}}" data-caption="{{coin.title}}"><img src="{{coin.avers.url}}" align="center" width="60" height="60" alt="{{coin.title}} - аверс"/></a>{% endif %}</div>
-					<div class = "col-6">{% if coin.revers %}<a  data-fancybox="grp{{ forloop.counter }}" href="{{coin.revers.url}}" data-caption="{{coin.title}}"><img src="{{coin.revers.url}}" width="60" height="60" alt="{{coin.title}} - реверс"/></a>{% endif %}</div>
+					<div class = "col-6">
+						{% if coin.avers %}
+						<a data-fancybox="grp{{ forloop.counter }}" href="{{coin.avers.url}}" data-caption="{{coin.title}}">
+							{% thumbnail coin.avers "120x120" crop="center" as im %}
+							<img src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - аверс"/>
+							{% endthumbnail %}
+						</a>
+						{% endif %}
+					</div>
+					<div class = "col-6">
+						{% if coin.revers %}
+						<a  data-fancybox="grp{{ forloop.counter }}" href="{{coin.revers.url}}" data-caption="{{coin.title}}">
+							{% thumbnail coin.revers "120x120" crop="center" as im %}
+							<img src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - реверс"/>
+							{% endthumbnail %}
+						</a>
+						{% endif %}
+					</div>
 				</div>
 			</div>
 			{% firstof coin.comment coin.special not coin.haveit coin.country as more_info %}
