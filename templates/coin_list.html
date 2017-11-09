@@ -4,8 +4,10 @@
 <html lang="ru">
 <head>
 {% block fancy_js_css %}
-{{block.super}}
+<script type="text/javascript" src="{% static '/fancybox/jquery.fancybox.min.js' %}"></script>
+<link rel="stylesheet" href="{% static '/fancybox/jquery.fancybox.min.css' %}" type="text/css" media="screen" />
 <script type="text/javascript">
+
 function startsearch(mode) {
 	$('<input />').attr('type', 'hidden')
           .attr('name', "h")
@@ -14,7 +16,44 @@ function startsearch(mode) {
 	$('form#form_search').submit();
 
 }
+
+$(document).ready( function() {
+$("#id_country").change(
+  function(){
+   $('form#form_search').submit();
+});
+
+$("[data-fancybox]").fancybox({
+	loop : true,
+	lang : "ru",
+	autoSize: "true",
+	i18n : {
+        'ru' : {
+            CLOSE       : 'Закрыть',
+            NEXT        : 'Вперёд',
+            PREV        : 'Назад',
+            ERROR       : 'Содержание не может быть загружено.',
+            PLAY_START  : 'Начать проигрывание',
+            PLAY_STOP   : 'Пауза',
+            FULL_SCREEN : 'Плный экран',
+            THUMBS      : 'Галерея'
+			},
+        },
+	buttons : [
+        'close'
+    ],
+	});
+})
 </script>
+
+<style type="text/css">
+		.fancybox-container {
+			box-shadow: 0 0 50px #222;
+			width: 100%;
+			height: 100%;
+			/*margin: 10%;*/
+		}
+</style>
 {% endblock%}
 </head>
 
@@ -49,7 +88,6 @@ function startsearch(mode) {
 					{% if after_search %}
 					<a href="{{BASE_URL}}/coins"><span class="input-group-addon" id="basic-addon1">&times;</span></a>
 					{% endif %}
-					
 					{{form.country}}
 					</div>
 					<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="номинал" aria-label="Search for..." name="v" id="id_v" value="{{sv}}">
@@ -73,12 +111,12 @@ function startsearch(mode) {
 	
 
 {% for coin in object_list %}
-	{% cycle 'cF' 'c2' 'cL' as cardnum silent %}
+	{% cycle 'cF' 'c2' 'c3' 'cL' as cardnum silent %}
 	{% if cardnum ==  'cF'  %}
 	<!--div class="card-group"-->
 	<div class="row">
 	{% endif%}
-	<div class="col-md-4">
+	<div class="col-md-3">
 		<div class="card bg-light border border-secondary rounded m-1">
 			<div class="card-body">
 				<div class = "row">
@@ -88,7 +126,7 @@ function startsearch(mode) {
 				<div class = "row">
 					<div class = "col-6">
 						{% if coin.avers %}
-						<a data-fancybox="grp{{ forloop.counter }}" href="{{coin.avers.url}}" data-caption="{{coin.title}}">
+						<a  data-fancybox="grp{{ forloop.counter }}" href="{{coin.avers.url}}" data-caption="{{coin.title}}">
 							{% thumbnail coin.avers "120x120" crop="center" as im %}
 							<img src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - аверс"/>
 							{% endthumbnail %}

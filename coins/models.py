@@ -125,7 +125,7 @@ class Coin(models.Model):
 			sql_str += ' ORDER BY `year`,`value`'
 			print ("SQL:",sql_str)
 			found_items = Coin.objects.raw(sql_str)
-		return {'sc':sc, 'sy': sy, 'sv':sv, 'sq': sq, 'object_list': found_items,'after_search': not empty_request,'count':len(list(found_items))}
+		return {'sc':sc, 'sy': sy, 'sv':sv, 'sq': sq, 'object_list': found_items,'after_search': not empty_request}
 		
 			
 		

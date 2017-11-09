@@ -6,7 +6,7 @@
 </head>
 
 {% block content %}
-<div class="container-fluid">
+<div class="container">
 
 <form action="" method = "post" id="form_update_coin" enctype="multipart/form-data">
 {% csrf_token %}
@@ -29,17 +29,29 @@
  </div>
 </nav>
 {% for field in form %}
-<div class="row justify-content-center my-3">
-	<div class="col-sm-2">
+<div class="row justify-content-center my-2 clear-fix">
+	<div class="col-sm-2 float-left">
 		{{field.label}}
 	</div>
-	<div class="col-sm-8">
+	<div class="col-sm-8 float-left">
 		{{field}}
 	</div>
 </div>
 {% empty%}
 <p> Форма пуста </p>
 {% endfor %}
+
+<div class = "row justify-content-center my-3">
+	<div class = "col-sm-2">
+	&nbsp;
+	</div>
+	<div class = "col-sm-2">
+	<button type="button" href="javascript:void(0);" class = "btn btn-primary btn-block" onclick="document.getElementById('form_update_coin').submit();">Сохранить</button>
+	</div>
+	<div class = "col-sm-6">
+	&nbsp;
+	</div>
+</div>
 </form>
 </div>
 {% endblock %}
