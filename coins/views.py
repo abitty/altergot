@@ -11,7 +11,7 @@ from django.utils.decorators import method_decorator
 from django import forms
 from django.forms import ModelChoiceField
 from django.urls import reverse
-
+from sets.models import Collection
 
 
 # Create your views here.
@@ -40,13 +40,15 @@ class CoinForm(forms.ModelForm):
 	class Meta(object):
 		model = Coin
         #exclude = ('status',)
-		fields = ['country','value','year','inuse','haveit','special','specific','specific','condition','avers','revers','comment']
+		fields = ['country','value','year','inuse','haveit','special','sell','specific','condition','avers','revers','comment']
 		
 		
 class SearchForm(forms.ModelForm):
 	country = ModelChoiceField(queryset=Country.objects, empty_label="Страна")
 	def __init__(self, *args, **kwargs):
 		super(SearchForm, self).__init__(*args, **kwargs)
+		#self.fields['colls'].queryset = Collection.coins_coll()
+		
 		for field in iter(self.fields):
 			self.fields[field].widget.attrs.update({
 				'class': 'form-control'
@@ -72,18 +74,52 @@ class CoinsListView(ListView):
 	model = Coin
 	template_name = 'coin_list.html'
 	form_class = SearchForm
+	params = {}
+	
+	def request_or_session(self,request,key):
+		exist = True
+		try:
+			s = self.params[key]
+		except KeyError:
+			exist = False
+			s=''
+		ss = request.session.get(key,'')
+		request.session[key] = s
+		if not exist:
+			s = ss
+		request.session[key] = s
+		self.params[key]=s
+		print ('key=',key,' req=',s,' ses=',ss)
 	
 	def get(self, request):
-		found_items= self.model.do_search(self.model,request)
+		self.params = request.GET.dict()
+		print ("params=",self.params)
+		self.request_or_session(request,'country')
+		self.request_or_session(request,'coll')
+		self.request_or_session(request,'v')
+		self.request_or_session(request,'y')
+		self.request_or_session(request,'q')
+		
+		print ("params=",self.params)
+		
+		found_items= self.model.do_search(self.model,self.params)
 		if found_items['sc']:
 			#form = self.form_class(initial={'country':found_items['sc']})
-			form = self.form_class(initial=request.GET)
+			form = self.form_class(initial=self.params)
 		else:
 			form = self.form_class()
+			
+			
 		found_items['form'] = form
+		collstr = self.params.get('coll','')
+		found_items['coll'] = collstr
+		if collstr:
+			print ("collstr=",collstr)
+			coll = Collection.objects.get(id=found_items['coll'])
+			if coll:
+				found_items['collection'] = coll			
+				found_items['is_owner'] = coll.owner.id == request.user.id
 		return render(request, self.template_name, found_items)
-	def get_last_country(self):
-		return self.last_country
 
 
 	
@@ -97,9 +133,13 @@ class CoinUpdate(UpdateView):
 		'comment':Textarea(attrs={'cols':160, 'rows':40}),
 	}
 	def get_success_url(self):
-		qd = self.request.GET
+		#qd = self.request.GET
 		qd = self.model.get_last_query(self.model)
-		lc = reverse('sel')+'?'+qd.urlencode(safe='/')
+		if qd: 
+			lc = reverse('sel')
+			#lc = reverse('sel')+'?'+qd.urlencode(safe='/')
+		else:
+			lc = reverse('sel')
 		return lc
 		#return model.get_absolute_path()
 
@@ -132,7 +172,6 @@ class CoinDelete(DeleteView):
 	fields = ['coin_id','country','value','year']
 	
 	def get_success_url(self):
-		qd = self.request.GET
 		qd = self.model.get_last_query(self.model)
 		lc = reverse('sel')+'?'+qd.urlencode(safe='/')
 		return lc
