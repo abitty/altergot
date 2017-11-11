@@ -75,7 +75,7 @@ STATICFILES_FINDERS = [
 SECRET_KEY = 'nq*ttx%pl^lw%tmlq$&tz&7qex2#)u(b=a+@re2gchi94sgooc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 THUMBNAIL_DEBUG = DEBUG
 
@@ -93,6 +93,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	'sorl.thumbnail',
     'coins',
+	'sets',
+
 ]
 
 MIDDLEWARE = [
