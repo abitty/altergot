@@ -32,10 +32,10 @@ $("[data-fancybox]").fancybox({
             CLOSE       : 'Закрыть',
             NEXT        : 'Вперёд',
             PREV        : 'Назад',
-            ERROR       : 'Содержание не может быть загружено.',
+            ERROR       : 'Файл не найден',
             PLAY_START  : 'Начать проигрывание',
             PLAY_STOP   : 'Пауза',
-            FULL_SCREEN : 'Плный экран',
+            FULL_SCREEN : 'Полный экран',
             THUMBS      : 'Галерея'
 			},
         },
@@ -59,42 +59,48 @@ $("[data-fancybox]").fancybox({
 
 <body>
 {% block content %}
-
+<p> {{request.session}}</p>
 <div class="container-fluid">
-	<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
-		<a class="navbar-brand" href="/coins/">Монеты</a>
+	<nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background-color: #e1e5e8;">
+		<a class="navbar-brand" href="{{collection.url}}">{{collection}}</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
+				{% if is_owner %}
 				<li class="nav-item">
 					<a class="nav-link" href="{{BASE_URL}}/coins/create">Добавить</a>
 				</li>
+				{% endif %}
 				{% if user.is_authenticated %}
 				<li class="nav-item">
-					<a class="nav-link" href="{{BASE_URL}}/logout/">Выход&nbsp;({{user.username}})</a>
+					<a class="nav-link" href="{{BASE_URL}}/logout/">Выход&nbsp;<span class="small">({{user.username}})</span></a>
 				</li>
 				{% else %}
 				<li class="nav-item">
 					<a class="nav-link" href="{{BASE_URL}}/login/?next=/coins/">Войти</a>
 				</li>
 				{% endif%}
+				<li class="nav-item">
+					<a class="nav-link" href="/">В начало</a>
+				</li>
 				
 			</ul>
 			<form class="form-inline my-2 my-sm-0" method="get" action="{% url 'sel' %}" id="form_search">
 				<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+					<input type="hidden" name="coll" id="id_coll" value="{{coll}}">
 					{% if after_search %}
 					<a href="{{BASE_URL}}/coins"><span class="input-group-addon" id="basic-addon1">&times;</span></a>
 					{% endif %}
 					{{form.country}}
 					</div>
-					<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="номинал" aria-label="Search for..." name="v" id="id_v" value="{{sv}}">
-					<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="год" aria-label="Search for..." name="y" id="id_y" value="{{sy}}">
-					<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="особенности" aria-label="Search for..." name="q" id="id_q" value="{{sq}}">
+					<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="номинал" aria-label="Search for..." name="v" id="id_v" value="{{v}}">
+					<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="год" aria-label="Search for..." name="y" id="id_y" value="{{y}}">
+					<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="особенности" aria-label="Search for..." name="q" id="id_q" value="{{q}}">
 					<div class="btn-group bg-light">
-						<button class="btn btn-secondary btn-sm" type="submit">Поиск</button>
+						<button class="btn btn-secondary" type="submit">Поиск</button>
 						
 						<button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLink">
 							<span class="sr-only">Toggle Dropdown</span>
@@ -120,15 +126,19 @@ $("[data-fancybox]").fancybox({
 		<div class="card bg-light border border-secondary rounded m-1">
 			<div class="card-body">
 				<div class = "row">
-					<div class = "col-sm"><a href="{{ coin.url }}"><h4 class="card-title">{{coin.title}}</h4></a></div>
+					<div class = "col-sm">
+					{% if is_owner %}<a href="{{ coin.url }}">{% endif %}
+					<h4 class="card-title">{{coin.title}}</h4>
+					{% if is_owner %}</a>{% endif %}
+					</div>
 					<div class = "col-sm">{% if coin.specific %}<small class="text-muted">{{coin.specific}}</small>{% endif %}</div>
 				</div>
 				<div class = "row">
-					<div class = "col-6">
+					<div class = "col-6" >
 						{% if coin.avers %}
 						<a  data-fancybox="grp{{ forloop.counter }}" href="{{coin.avers.url}}" data-caption="{{coin.title}}">
 							{% thumbnail coin.avers "120x120" crop="center" as im %}
-							<img src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - аверс"/>
+							<img class="rounded-circle" src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - аверс"/>
 							{% endthumbnail %}
 						</a>
 						{% endif %}
@@ -137,20 +147,21 @@ $("[data-fancybox]").fancybox({
 						{% if coin.revers %}
 						<a  data-fancybox="grp{{ forloop.counter }}" href="{{coin.revers.url}}" data-caption="{{coin.title}}">
 							{% thumbnail coin.revers "120x120" crop="center" as im %}
-							<img src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - реверс"/>
+							<img class="rounded-circle" src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - реверс"/>
 							{% endthumbnail %}
 						</a>
 						{% endif %}
 					</div>
 				</div>
 			</div>
-			{% firstof coin.comment coin.special not coin.haveit coin.country as more_info %}
+			{% firstof coin.comment coin.special not coin.haveit coin.country coin.sell as more_info %}
 			{% if more_info %}
 			<div class="card-footer">
 				<p class="mb-0"><small class="text-muted">{{coin.condition_text}} состояние</small></p> 
 				{% if coin.special %} <p class="mb-0"><small class="text-muted">Памятная</small></p> {% endif %}
 				{% if not coin.haveit %} <p class="mb-0"><small class="text-muted">Нет в коллекции</small></p> {% endif %}
 				{% if coin.comment %} <p class="mb-0"> <small class="text-muted">{{coin.comment}}</small></p> {% endif %}
+				{% if coin.sell %} <p class="mb-0"><small class="text-muted">Продажа/обмен</small></p> {% endif %}
 			</div>
 			{% endif %}
 		</div>

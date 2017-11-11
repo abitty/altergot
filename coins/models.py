@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
+from sets.models import Collection
 
 
 def image_path(instance, filename):
@@ -38,6 +39,7 @@ class Coin(models.Model):
 	inuse = models.BooleanField("Хождение",default=False)
 	haveit = models.BooleanField("В коллекции",default=True)
 	special = models.BooleanField("Памятная",default=False)
+	sell = models.BooleanField("Продажа/обмен",default=False, blank=True)
 	condition = models.CharField("Состояние", default = 'VG', max_length = 2,choices = COND_CHOICES)
 	avers = models.ImageField("Аверс",upload_to = 'uploads/',blank=True)
 	revers = models.ImageField("Реверс",upload_to = 'uploads/',blank=True)
@@ -46,7 +48,7 @@ class Coin(models.Model):
 		default = timezone.now)
 		
 		
-	last_query = ()
+	last_query = {}
 	class Meta:
 		verbose_name = "Монета"
 		verbose_name_plural = "Монеты"
@@ -77,55 +79,63 @@ class Coin(models.Model):
 				result = v
 		return result
 	def set_last_query(self, lq):
-		self.last_query = lq
+		self.last_query = list(lq)
 	def get_last_query(self):
 		return self.last_query 
 		
 	def do_search(self,request):
-		self.set_last_query(self,request.GET)
+		self.set_last_query(self,request)
 		found_items = None
 		where = '' 
 		empty_request = True
 		sy = '';
 		prefix = ' WHERE '
-		sy = request.GET.get('y','')
+			
+		sy = request.get('y','')
 		if sy:
 			where = prefix.join([where,"`year` LIKE '"+sy+"%%'"])
 			empty_request = False
 			prefix = ' AND '
 	
-		sv = request.GET.get('v','');
+		sv = request.get('v','');
 		if sv:
 			where = prefix.join([where,"`value` LIKE '"+sv+"%%'"])
 			empty_request = False
 			prefix = ' AND '
 		
-		sq = request.GET.get('q','');
+		sq = request.get('q','');
 		if sq:
 			where = prefix.join([where,"(`comment` LIKE '%%"+sq+"%%' OR `specific` LIKE '%%"+sq+"%%')"])
 			empty_request = False
 			prefix = ' AND '
 			
-		s = request.GET.get('h','')
+		s = request.get('h','')
 		if s:
 			where = prefix.join([where, '`haveit`='+s])
 			empty_request = False
 			prefix = ' AND '
 			
-		sc = request.GET.get('country','')
+		sc = request.get('country','')
 		if sc:
 			where = prefix.join([where, '`country_id`='+sc])
 			empty_request = False
 			prefix = ' AND '
 			
-		sql_str = "SELECT * FROM `coins_coin`"
-		if where:
-			sql_str += where 
-		if not empty_request:
-			sql_str += ' ORDER BY `year`,`value`'
-			print ("SQL:",sql_str)
-			found_items = Coin.objects.raw(sql_str)
-		return {'sc':sc, 'sy': sy, 'sv':sv, 'sq': sq, 'object_list': found_items,'after_search': not empty_request}
+		coll = None	
+		cs = request.get('coll','')
+		if cs.isdigit():
+			coll = Collection.objects.get(id=cs)
+		print ("cs=",cs, " isdigit:",cs.isdigit(), " coll=",coll)
+		if coll:
+			where = prefix.join([where, '`owner_id`='+str(coll.owner_id)])
+			sql_str = "SELECT * FROM `coins_coin`"
+			if where:
+				sql_str += where 
+			if not empty_request:
+				sql_str += ' ORDER BY `year`,`value`'
+				print ("SQL:",sql_str)
+				found_items = Coin.objects.raw(sql_str)
+		return {'sc':sc, 'y': sy, 'v':sv, 'q': sq, 'object_list': found_items,'after_search': not empty_request}
 		
 			
 		
