@@ -4,8 +4,8 @@ from django.urls import reverse
 from sets.models import Collection
 
 
-def image_path(instance, filename):
-    return os.path.join('uploads/coins/', str(instance.some_identifier),'/', 'filename.ext')
+#def image_path(instance, filename):
+#    return os.path.join('uploads/coins/', str(instance.some_identifier),'/', 'filename.ext')
 
 class Country(models.Model):
 	country = models.CharField("Страна", max_length=128, blank=False)
@@ -40,7 +40,7 @@ class Coin(models.Model):
 	haveit = models.BooleanField("В коллекции",default=True)
 	special = models.BooleanField("Памятная",default=False)
 	sell = models.BooleanField("Продажа/обмен",default=False, blank=True)
-	condition = models.CharField("Состояние", default = 'VG', max_length = 2,choices = COND_CHOICES)
+	condition = models.CharField("Состояние", default = 'VG', max_length = 2,choices = COND_CHOICES, blank=True)
 	avers = models.ImageField("Аверс",upload_to = 'uploads/',blank=True)
 	revers = models.ImageField("Реверс",upload_to = 'uploads/',blank=True)
 	comment = models.CharField("Комментарии",max_length=255, blank=True)
