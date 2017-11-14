@@ -2,7 +2,11 @@ from django.db import models
 from django.utils import timezone
 from django.urls import reverse
 from sets.models import Collection
+import logging
 
+
+#logger = logging.getlogger(coins.models)
+logger = logging.getLogger(__name__)
 
 #def image_path(instance, filename):
 #    return os.path.join('uploads/coins/', str(instance.some_identifier),'/', 'filename.ext')
@@ -31,8 +35,8 @@ class Coin(models.Model):
 		('BD','Плохое')
 	)
 
-	owner = models.ForeignKey('auth.User',on_delete=models.CASCADE)
-	country = models.ForeignKey(Country,on_delete=models.CASCADE)
+	owner = models.ForeignKey('auth.User',on_delete=models.CASCADE, verbose_name="Владелец")
+	country = models.ForeignKey(Country,on_delete=models.CASCADE, verbose_name="Страна")
 	value = models.CharField("Номинал",max_length=128)
 	year = models.CharField("Год на монете",max_length=64, blank=True)
 	specific = models.CharField("Особенности", max_length=255, blank=True)
@@ -134,7 +138,9 @@ class Coin(models.Model):
 			if not empty_request:
 				sql_str += ' ORDER BY `year`,`value`'
 				print ("SQL:",sql_str)
+				logger.debug("SQL: "+sql_str)
 				found_items = Coin.objects.raw(sql_str)
+				
 		return {'sc':sc, 'y': sy, 'v':sv, 'q': sq, 'object_list': found_items,'after_search': not empty_request}
 		
 			
