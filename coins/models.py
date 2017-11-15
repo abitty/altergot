@@ -115,7 +115,10 @@ class Coin(models.Model):
 			
 		s = request.get('h','')
 		if s:
-			where = prefix.join([where, '`haveit`='+s])
+			if s == '2':
+				where = prefix.join([where, "`sell`=true"]) # поиск монет "на продажу", которых больше одной
+			else:
+				where = prefix.join([where, '`haveit`='+s]) # поиск в коллекции/в хотелках
 			empty_request = False
 			prefix = ' AND '
 			
