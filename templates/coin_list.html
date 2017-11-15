@@ -164,7 +164,7 @@ $("[data-fancybox]").fancybox({
 				{% if coin.special %} <p class="mb-0"><small class="text-muted">Памятная</small></p> {% endif %}
 				{% if not coin.haveit %} <p class="mb-0"><small class="text-muted">Нет в коллекции</small></p> {% endif %}
 				{% if coin.comment %} <p class="mb-0"> <small class="text-muted">{{coin.comment}}</small></p> {% endif %}
-				{% if coin.sell %} <p class="mb-0"><small class="text-muted">Продажа/обмен</small></p> {% endif %}
+				{% if coin.sell %} <p class="mb-0"><small class="text-muted">Более 1 экз.</small></p> {% endif %}
 			</div>
 			{% endif %}
 		</div>
