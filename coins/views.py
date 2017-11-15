@@ -75,6 +75,7 @@ class CoinsListView(ListView):
 	template_name = 'coin_list.html'
 	form_class = SearchForm
 	params = {}
+	empty_request = True
 	
 	def request_or_session(self,request,key):
 		exist = True
@@ -86,16 +87,32 @@ class CoinsListView(ListView):
 		ss = request.session.get(key,'')
 		request.session[key] = s
 		if not exist:
-			s = ss
+			if self.empty_request:
+				s = ss
+			else:
+				s = ''
 		request.session[key] = s
 		self.params[key]=s
 		print ('key=',key,' req=',s,' ses=',ss)
+		
+	def key_exist(self,request,key):
+		exist = True
+		try:
+			s = self.params[key]
+		except KeyError:
+			exist = False
+		return exist
+		
 	
 	def get(self, request):
 		self.params = request.GET.dict()
 		print ("params=",self.params)
-		self.request_or_session(request,'country')
 		self.request_or_session(request,'coll')
+		if not self.key_exist(request,'v') and not self.key_exist(request,'y') and not self.key_exist(request,'q'):
+			self.empty_request = True
+		else:
+			self.empty_request = False
+		self.request_or_session(request,'country')
 		self.request_or_session(request,'v')
 		self.request_or_session(request,'y')
 		self.request_or_session(request,'q')
