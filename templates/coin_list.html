@@ -18,11 +18,12 @@ function startsearch(mode) {
 }
 
 $(document).ready( function() {
+/*
 $("#id_country").change(
   function(){
    $('form#form_search').submit();
 });
-
+*/
 $("[data-fancybox]").fancybox({
 	loop : true,
 	lang : "ru",
@@ -95,7 +96,7 @@ $("[data-fancybox]").fancybox({
 				<div class="input-group mb-2 mr-sm-2 mb-sm-0">
 					<input type="hidden" name="coll" id="id_coll" value="{{coll}}">
 					{% if after_search %}
-					<a href="{{BASE_URL}}/coins"><span class="input-group-addon" id="basic-addon1">&times;</span></a>
+					<a href="{{BASE_URL}}/coins/sel/?clr=1"><span class="input-group-addon" id="basic-addon1">&times;</span></a>
 					{% endif %}
 					{{form.country}}
 					</div>

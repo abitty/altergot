@@ -12,6 +12,10 @@ from django import forms
 from django.forms import ModelChoiceField
 from django.urls import reverse
 from sets.models import Collection
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 # Create your views here.
@@ -76,6 +80,7 @@ class CoinsListView(ListView):
 	form_class = SearchForm
 	params = {}
 	empty_request = True
+	clear_search = False
 	
 	def request_or_session(self,request,key):
 		exist = True
@@ -87,13 +92,14 @@ class CoinsListView(ListView):
 		ss = request.session.get(key,'')
 		request.session[key] = s
 		if not exist:
-			if self.empty_request:
+			if self.empty_request and not self.clear_search:
 				s = ss
 			else:
 				s = ''
 		request.session[key] = s
 		self.params[key]=s
 		print ('key=',key,' req=',s,' ses=',ss)
+		logger.debug('key:'+key+' rq='+s+' ss='+ss)
 		
 	def key_exist(self,request,key):
 		exist = True
@@ -107,8 +113,12 @@ class CoinsListView(ListView):
 	def get(self, request):
 		self.params = request.GET.dict()
 		print ("params=",self.params)
+		logger.debug("request="+request.body.decode('utf-8'))
+		self.clear_search = False
 		self.request_or_session(request,'coll')
-		if not self.key_exist(request,'v') and not self.key_exist(request,'y') and not self.key_exist(request,'q'):
+		if self.params.get('clr','0') == '1':
+			self.clear_search = True
+		if not self.key_exist(request,'country') and not self.key_exist(request,'v') and not self.key_exist(request,'y') and not self.key_exist(request,'q'):
 			self.empty_request = True
 		else:
 			self.empty_request = False
@@ -118,6 +128,7 @@ class CoinsListView(ListView):
 		self.request_or_session(request,'q')
 		
 		print ("params=",self.params)
+		logger.debug(" clr="+str(self.clear_search)+" empty="+str(self.empty_request))
 		
 		found_items= self.model.do_search(self.model,self.params)
 		if found_items['sc']:
