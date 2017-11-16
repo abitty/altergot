@@ -123,12 +123,16 @@ class CoinsListView(ListView):
 			self.empty_request = True
 		else:
 			self.empty_request = False
+			
+		show_country = False	
+		if not self.params.get('country',''):
+			show_country = True	
 		self.request_or_session(request,'country')
 		self.request_or_session(request,'v')
 		self.request_or_session(request,'y')
 		self.request_or_session(request,'q')
 		
-		print ("params=",self.params)
+		print ("params=",self.params," show_country=",show_country)
 		logger.debug(" clr="+str(self.clear_search)+" empty="+str(self.empty_request))
 		
 		found_items= self.model.do_search(self.model,self.params)
@@ -143,11 +147,11 @@ class CoinsListView(ListView):
 		collstr = self.params.get('coll','')
 		found_items['coll'] = collstr
 		if collstr:
-			print ("collstr=",collstr)
 			coll = Collection.objects.get(id=found_items['coll'])
 			if coll:
 				found_items['collection'] = coll			
 				found_items['is_owner'] = coll.owner.id == request.user.id
+				found_items['show_country'] = show_country
 		return render(request, self.template_name, found_items)
 
 
