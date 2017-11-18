@@ -23,6 +23,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^coins/', include('coins.urls')),
+    url(r'^bones/', include('bones.urls')),
 	url(r'', include('idxpage.urls')),
 	url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'),name='login'),
 	url(r'^logout/$', auth_views.LogoutView.as_view(template_name='logout.html')),

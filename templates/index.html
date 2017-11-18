@@ -44,7 +44,7 @@
 					  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
 						<h6 class="dropdown-header">Доступные коллекции:</h6>
 						{% for coll in coins_coll %}
-						<a class="dropdown-item" href="{{coll.url}}">{{coll.name}}</a>
+						<a class="dropdown-item" href="/coins/{{coll.url}}">{{coll.name}}</a>
 						{% endfor %}
 					  </div>
 					</div>				
@@ -61,13 +61,13 @@
 					{% if bones_coll %}
 					<div class="dropdown show">
 					  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Монеты
+						Купюры
 					  </a>
 
 					  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
 						<h6 class="dropdown-header">Доступные коллекции:</h6>
 						{% for coll in bones_coll %}
-						<a class="dropdown-item" href="?coll={{coll.id}}">{{coll.name}}</a>
+						<a class="dropdown-item" href="/bones/{{coll.url}}">{{coll.name}}</a>
 						{% endfor %}
 					  </div>
 					</div>				

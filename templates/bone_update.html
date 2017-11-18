@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+<html lang="ru">
+<head>
+</head>
+
+{% block content %}
+<div class="container">
+
+<form action="" method = "post" id="form_update_coin" enctype="multipart/form-data">
+{% csrf_token %}
+<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light justify-content-between">
+<a class="navbar-brand" href="{{BASE_URL}}/coins">Купюры</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+     <li class="nav-item">
+	<!--button action="Submit">Сохранить</button-->
+	<a class="nav-link" href="javascript:void(0);" onclick="document.getElementById('form_update_coin').submit();" >Сохранить</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="delete/">Удалить</a>
+      </li>
+    </ul>
+ </div>
+</nav>
+{% for field in form %}
+<div class="row justify-content-center my-2 clear-fix">
+	<div class="col-sm-2">
+		{{field.label}}
+	</div>
+	<div class="col-sm-8">
+		{{field}}
+	</div>
+</div>
+{% empty%}
+<p> Форма пуста </p>
+{% endfor %}
+
+<div class = "row justify-content-center my-3">
+	<div class = "col-sm-2">
+	&nbsp;
+	</div>
+	<div class = "col-sm-2">
+	<button type="button" href="javascript:void(0);" class = "btn btn-primary btn-block" onclick="document.getElementById('form_update_coin').submit();">Сохранить</button>
+	</div>
+	<div class = "col-sm-6">
+	&nbsp;
+	</div>
+</div>
+</form>
+</div>
+{% endblock %}
+
+
+	

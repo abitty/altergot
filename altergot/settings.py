@@ -93,6 +93,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	'sorl.thumbnail',
     'coins',
+    'bones',
 	'sets',
 ]
 

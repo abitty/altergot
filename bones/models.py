@@ -2,32 +2,14 @@ from django.db import models
 from django.utils import timezone
 from django.urls import reverse
 from sets.models import Collection
+from coins.models import Country
 import logging
 
 
-#logger = logging.getlogger(coins.models)
 logger = logging.getLogger(__name__)
 
-#def image_path(instance, filename):
-#    return os.path.join('uploads/coins/', str(instance.some_identifier),'/', 'filename.ext')
-
-class Country(models.Model):
-	country = models.CharField("Страна", max_length=128, blank=False)
-	def __str__(self):
-		return self.country
-	def __unicode__(self):
-		return self.country
-	class Meta:
-		verbose_name = "Страна"
-		verbose_name_plural = "Страны"
-		indexes = [
-			models.Index(fields=['country']),
-		]
-		
-	
-	
 # Create your models here.
-class Coin(models.Model):
+class Bone(models.Model):
 	COND_CHOICES = (
 		('MN','Отличное'),
 		('VG','Хорошее'),
@@ -38,7 +20,7 @@ class Coin(models.Model):
 	owner = models.ForeignKey('auth.User',on_delete=models.CASCADE, verbose_name="Владелец")
 	country = models.ForeignKey(Country,on_delete=models.CASCADE, verbose_name="Страна")
 	value = models.CharField("Номинал",max_length=128)
-	year = models.CharField("Год на монете",max_length=64, blank=True)
+	year = models.CharField("Год на купюре",max_length=64, blank=True)
 	specific = models.CharField("Особенности", max_length=255, blank=True)
 	inuse = models.BooleanField("Хождение",default=False)
 	haveit = models.BooleanField("В коллекции",default=True)
@@ -53,8 +35,8 @@ class Coin(models.Model):
 		
 		
 	class Meta:
-		verbose_name = "Монета"
-		verbose_name_plural = "Монеты"
+		verbose_name = "Купюра"
+		verbose_name_plural = "Купюры"
 		indexes = [
 			models.Index(fields=['year', 'value']),
 		]
@@ -120,24 +102,14 @@ class Coin(models.Model):
 		print ("cs=",cs, " isdigit:",cs.isdigit(), " coll=",coll)
 		if coll:
 			where = prefix.join([where, '`owner_id`='+str(coll.owner_id)])
-			sql_str = "SELECT * FROM `coins_coin`"
+			sql_str = "SELECT * FROM `bones_bone`"
 			if where:
 				sql_str += where 
 			if not empty_request:
 				sql_str += ' ORDER BY `year`,`value`'
 				print ("SQL:",sql_str)
 				logger.debug("SQL: "+sql_str)
-				found_items = Coin.objects.raw(sql_str)
+				found_items = Bone.objects.raw(sql_str)
 				
 		return {'sc':sc, 'y': sy, 'v':sv, 'q': sq, 'object_list': found_items,'after_search': not empty_request}
 		
-			
-		
-		
-		
-from django.contrib import admin
-admin.site.register(Country)		
-		
-		
-
- 

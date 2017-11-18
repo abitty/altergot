@@ -24,7 +24,13 @@ class Collection(models.Model):
 		if self.kind == 'CN':
 			lq = {}
 			lq['coll'] = self.id
-			lc = reverse('sel')+'?'+urlencode(lq)			
+			#lc = reverse('sel')+'?'+urlencode(lq)			
+			lc = '?'+urlencode(lq)
+			print ("lc=",lc)
+		elif self.kind == 'BN':
+			lq = {}
+			lq['coll'] = self.id
+			lc = '?'+urlencode(lq)			
 			print ("lc=",lc)
 		return lc
 		

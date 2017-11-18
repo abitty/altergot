@@ -74,7 +74,7 @@ $("[data-fancybox]").fancybox({
 			<ul class="navbar-nav mr-auto">
 				{% if is_owner %}
 				<li class="nav-item">
-					<a class="nav-link" href="{{BASE_URL}}/coins/create">Добавить</a>
+					<a class="nav-link" href="{{BASE_URL}}/bones/create">Добавить</a>
 				</li>
 				{% endif %}
 				{% if user.is_authenticated %}
@@ -83,7 +83,7 @@ $("[data-fancybox]").fancybox({
 				</li>
 				{% else %}
 				<li class="nav-item">
-					<a class="nav-link" href="{{BASE_URL}}/login/?next=/coins/">Войти</a>
+					<a class="nav-link" href="{{BASE_URL}}/login/?next=/bones/">Войти</a>
 				</li>
 				{% endif%}
 				<li class="nav-item">
@@ -95,7 +95,7 @@ $("[data-fancybox]").fancybox({
 				<div class="input-group mb-2 mr-sm-2 mb-sm-0">
 					<input type="hidden" name="coll" id="id_coll" value="{{coll}}">
 					{% if after_search %}
-					<a href="{{BASE_URL}}/coins/sel/?clr=1"><span class="input-group-addon" id="basic-addon1">&times;</span></a>
+					<a href="{{BASE_URL}}/bones/sel/?clr=1"><span class="input-group-addon" id="basic-addon1">&times;</span></a>
 					{% endif %}
 					{{form.country}}
 					</div>
@@ -120,53 +120,53 @@ $("[data-fancybox]").fancybox({
 	</nav>
 	
 
-{% for coin in object_list %}
+{% for bone in object_list %}
 	{% cycle 'cF' 'c2' 'c3' 'cL' as cardnum silent %}
 	{% if cardnum ==  'cF'  %}
 	<!--div class="card-group"-->
 	<div class="row">
 	{% endif%}
-	<div class="col-md-3">
+	<div class="col-md-4">
 		<div class="card bg-light border border-secondary rounded m-1">
 			<div class="card-body">
 				<div class = "row">
 					<div class = "col-sm-7">
-					{% if is_owner %}<a href="{{ coin.url }}">{% endif %}
-					<h4 class="card-title">{{coin.title}}</h4>
+					{% if is_owner %}<a href="{{ bone.url }}">{% endif %}
+					<h4 class="card-title">{{bone.title}}</h4>
 					{% if is_owner %}</a>{% endif %}
 					</div>
-					<div class = "col-sm-5">{% if coin.specific %}<small class="text-muted">{{coin.specific}}</small>{% endif %}</div>
+					<div class = "col-sm-5">{% if bone.specific %}<small class="text-muted">{{bone.specific}}</small>{% endif %}</div>
 				</div>
-				<div class = "row">
-					<div class = "col-6" >
-						{% if coin.avers %}
-						<a  data-fancybox="grp{{ forloop.counter }}" href="{{coin.avers.url}}" data-caption="{{coin.title}}">
-							{% thumbnail coin.avers "120x120" crop="center" as im %}
-							<img class="rounded-circle" src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - аверс"/>
+				<div class = "row  justify-content-md-center">
+					<div class = "col-xl-6 mb-1">
+						{% if bone.avers %}
+						<a  data-fancybox="grp{{ forloop.counter }}" href="{{bone.avers.url}}" data-caption="{{bone.title}}">
+							{% thumbnail bone.avers "240" crop="center" as im %}
+							<img src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - аверс"/><br/>
 							{% endthumbnail %}
 						</a>
 						{% endif %}
 					</div>
-					<div class = "col-6">
-						{% if coin.revers %}
-						<a  data-fancybox="grp{{ forloop.counter }}" href="{{coin.revers.url}}" data-caption="{{coin.title}}">
-							{% thumbnail coin.revers "120x120" crop="center" as im %}
-							<img class="rounded-circle" src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - реверс"/>
+					<div class = "col-xl-6">
+						{% if bone.revers %}
+						<a  data-fancybox="grp{{ forloop.counter }}" href="{{bone.revers.url}}" data-caption="{{bone.title}}">
+							{% thumbnail bone.revers "240" crop="center" as im %}
+							<img src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - реверс"/><br/>
 							{% endthumbnail %}
 						</a>
 						{% endif %}
 					</div>
 				</div>
 			</div>
-			{% firstof coin.comment coin.special not coin.haveit coin.country coin.sell show_country as more_info %}
+			{% firstof bone.comment bone.special not bone.haveit bone.country bone.sell show_country as more_info %}
 			{% if more_info %}
 			<div class="card-footer">
-				{% if show_country %}<p class="mb-0"><small class="text-muted">{{coin.country}}</small></p> {% endif %}
-				{% if coin.condition %} <p class="mb-0"><small class="text-muted">{{coin.condition_text}} состояние</small></p> {% endif %}
-				{% if coin.special %} <p class="mb-0"><small class="text-muted">Памятная</small></p> {% endif %}
-				{% if not coin.haveit %} <p class="mb-0"><small class="text-muted">Нет в коллекции</small></p> {% endif %}
-				{% if coin.comment %} <p class="mb-0"> <small class="text-muted">{{coin.comment}}</small></p> {% endif %}
-				{% if coin.sell %} <p class="mb-0"><small class="text-muted">Более 1 экз.</small></p> {% endif %}
+				{% if show_country %}<p class="mb-0"><small class="text-muted">{{bone.country}}</small></p> {% endif %}
+				{% if bone.condition %} <p class="mb-0"><small class="text-muted">{{bone.condition_text}} состояние</small></p> {% endif %}
+				{% if bone.special %} <p class="mb-0"><small class="text-muted">Памятная</small></p> {% endif %}
+				{% if not bone.haveit %} <p class="mb-0"><small class="text-muted">Нет в коллекции</small></p> {% endif %}
+				{% if bone.comment %} <p class="mb-0"> <small class="text-muted">{{bone.comment}}</small></p> {% endif %}
+				{% if bone.sell %} <p class="mb-0"><small class="text-muted">Более 1 экз.</small></p> {% endif %}
 			</div>
 			{% endif %}
 		</div>
