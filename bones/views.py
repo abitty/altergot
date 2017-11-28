@@ -31,7 +31,7 @@ class BoneForm(forms.ModelForm):
 			})
 	class Meta(object):
 		model = Bone
-		fields = ['country','value','year','inuse','haveit','special','sell','specific','condition','avers','revers','comment']
+		fields = ['country','value','year','inuse','haveit','special','sell','specific','condition','avers','revers','small','comment']
 		
 		
 class BoneSearchForm(forms.ModelForm):

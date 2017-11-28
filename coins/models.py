@@ -47,6 +47,7 @@ class Coin(models.Model):
 	condition = models.CharField("Состояние", default = 'VG', max_length = 2,choices = COND_CHOICES, blank=True)
 	avers = models.ImageField("Аверс",upload_to = 'uploads/',blank=True)
 	revers = models.ImageField("Реверс",upload_to = 'uploads/',blank=True)
+	small = models.BooleanField("Маленькая",default=False)
 	comment = models.CharField("Комментарии",max_length=255, blank=True)
 	created_date = models.DateTimeField(
 		default = timezone.now)

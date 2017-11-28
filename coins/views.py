@@ -45,7 +45,7 @@ class CoinForm(forms.ModelForm):
 	class Meta(object):
 		model = Coin
         #exclude = ('status',)
-		fields = ['country','value','year','inuse','haveit','special','sell','specific','condition','avers','revers','comment']
+		fields = ['country','value','year','inuse','haveit','special','sell','specific','condition','avers','revers','small','comment']
 		
 		
 class SearchForm(forms.ModelForm):

@@ -29,6 +29,7 @@ class Bone(models.Model):
 	condition = models.CharField("Состояние", default = 'VG', max_length = 2,choices = COND_CHOICES, blank=True)
 	avers = models.ImageField("Аверс",upload_to = 'uploads/',blank=True)
 	revers = models.ImageField("Реверс",upload_to = 'uploads/',blank=True)
+	small = models.BooleanField("Маленькая",default=False)
 	comment = models.CharField("Комментарии",max_length=255, blank=True)
 	created_date = models.DateTimeField(
 		default = timezone.now)
@@ -55,6 +56,13 @@ class Bone(models.Model):
 			if k == self.condition:
 				result = v
 		return result
+	def landscape(self):
+		res = True
+		if self.avers and self.avers.width < self.avers.height:
+			res = False
+		if self.revers and self.revers.width < self.revers.height:
+			res = False
+		return res
 	def do_search(self,request):
 		found_items = None
 		where = '' 

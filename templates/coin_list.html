@@ -141,18 +141,30 @@ $("[data-fancybox]").fancybox({
 					<div class = "col-6" >
 						{% if coin.avers %}
 						<a  data-fancybox="grp{{ forloop.counter }}" href="{{coin.avers.url}}" data-caption="{{coin.title}}">
-							{% thumbnail coin.avers "120x120" crop="center" as im %}
-							<img class="rounded-circle" src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - аверс"/>
-							{% endthumbnail %}
+							{% if coin.small %}
+								{% thumbnail coin.avers "80x80" crop="center" as im %}
+								<img class="rounded-circle mx-auto d-block" src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - аверс"/>
+								{% endthumbnail %}
+							{% else %}
+								{% thumbnail coin.avers "120x120" crop="center" as im %}
+								<img class="rounded-circle mx-auto d-block" src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - аверс"/>
+								{% endthumbnail %}
+							{% endif %}
 						</a>
 						{% endif %}
 					</div>
 					<div class = "col-6">
 						{% if coin.revers %}
 						<a  data-fancybox="grp{{ forloop.counter }}" href="{{coin.revers.url}}" data-caption="{{coin.title}}">
-							{% thumbnail coin.revers "120x120" crop="center" as im %}
-							<img class="rounded-circle" src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - реверс"/>
-							{% endthumbnail %}
+							{% if coin.small %}
+								{% thumbnail coin.revers "80x80" crop="center" as im %}
+								<img class="rounded-circle mx-auto d-block" src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - реверс"/>
+								{% endthumbnail %}
+							{% else %}
+								{% thumbnail coin.revers "120x120" crop="center" as im %}
+								<img class="rounded-circle mx-auto d-block" src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{coin.title}} - реверс"/>
+								{% endthumbnail %}
+							{% endif %}
 						</a>
 						{% endif %}
 					</div>

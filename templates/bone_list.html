@@ -138,11 +138,43 @@ $("[data-fancybox]").fancybox({
 					<div class = "col-sm-5">{% if bone.specific %}<small class="text-muted">{{bone.specific}}</small>{% endif %}</div>
 				</div>
 				<div class = "row  justify-content-md-center">
-					<div class = "col-xl-6 mb-1">
+					{% if bone.landscape %}
+					<div class = "col-xl-12">
 						{% if bone.avers %}
 						<a  data-fancybox="grp{{ forloop.counter }}" href="{{bone.avers.url}}" data-caption="{{bone.title}}">
-							{% thumbnail bone.avers "240" crop="center" as im %}
-							<img src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - аверс"/><br/>
+							{% if bone.small %}
+								{% thumbnail bone.avers "180" crop="center" as im %}
+								<img class="mx-auto d-block" src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - аверс"/><br/>
+								{% endthumbnail %}
+							{% else %}
+								{% thumbnail bone.avers "280" crop="center" as im %}
+								<img class="mx-auto d-block" src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - аверс"/><br/>
+								{% endthumbnail %}
+							{% endif%}
+						</a>
+						{% endif %}
+					</div>
+					<div class = "col-xl-12">
+						{% if bone.revers %}
+						<a  data-fancybox="grp{{ forloop.counter }}" href="{{bone.revers.url}}" data-caption="{{bone.title}}">
+							{% if bone.small %}
+								{% thumbnail bone.revers "180" crop="center" as im %}
+								<img class="mx-auto d-block" src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - реверс"/><br/>
+								{% endthumbnail %}
+							{% else %}
+								{% thumbnail bone.revers "280" crop="center" as im %}
+								<img class="mx-auto d-block" src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - реверс"/><br/>
+								{% endthumbnail %}
+							{% endif%}
+						</a>
+						{% endif %}
+					</div>
+					{% else %}
+					<div class = "col-xl-6">
+						{% if bone.avers %}
+						<a  data-fancybox="grp{{ forloop.counter }}" href="{{bone.avers.url}}" data-caption="{{bone.title}}">
+							{% thumbnail bone.avers "180" crop="center" as im %}
+							<img class="mx-auto d-block" src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - аверс"/><br/>
 							{% endthumbnail %}
 						</a>
 						{% endif %}
@@ -150,12 +182,13 @@ $("[data-fancybox]").fancybox({
 					<div class = "col-xl-6">
 						{% if bone.revers %}
 						<a  data-fancybox="grp{{ forloop.counter }}" href="{{bone.revers.url}}" data-caption="{{bone.title}}">
-							{% thumbnail bone.revers "240" crop="center" as im %}
-							<img src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - реверс"/><br/>
+							{% thumbnail bone.revers "180" crop="center" as im %}
+							<img class="mx-auto d-block" src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - реверс"/><br/>
 							{% endthumbnail %}
 						</a>
 						{% endif %}
 					</div>
+					{% endif %}
 				</div>
 			</div>
 			{% firstof bone.comment bone.special not bone.haveit bone.country bone.sell show_country as more_info %}
