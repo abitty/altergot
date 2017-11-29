@@ -91,6 +91,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	'rest_framework',
 	'sorl.thumbnail',
     'coins',
     'bones',
@@ -110,6 +111,14 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'altergot.urls'
 
 WSGI_APPLICATION = 'altergot.wsgi.application'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAdminUser',
+    ],
+    'PAGE_SIZE': 10
+}
 
 
 # Database
