@@ -63,6 +63,17 @@ class Bone(models.Model):
 		if self.revers and self.revers.width < self.revers.height:
 			res = False
 		return res
+	def thumb_size(self):
+		if self.landscape():
+			if self.small:
+				return "180"
+			else:
+				return "280"
+		else:
+			if self.small:
+				return "120"
+			else:
+				return "180"
 	def do_search(self,request):
 		found_items = None
 		where = '' 

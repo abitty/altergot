@@ -121,12 +121,10 @@ $("[data-fancybox]").fancybox({
 	
 
 {% for bone in object_list %}
-	{% cycle 'cF' 'c2' 'cL' as cardnum silent %}
+	{% cycle 'cF' 'c2' 'c3' 'cL' as cardnum silent %}
 	{% if cardnum ==  'cF'  %}
-	<!--div class="card-group"-->
-	<div class="row">
+	<div class="card-deck">
 	{% endif%}
-	<div class="col-md-4">
 		<div class="card bg-light border border-secondary rounded m-1">
 			<div class="card-body">
 				<div class = "row">
@@ -139,55 +137,43 @@ $("[data-fancybox]").fancybox({
 				</div>
 				<div class = "row  justify-content-md-center">
 					{% if bone.landscape %}
-					<div class = "col-xl-12">
-						{% if bone.avers %}
-						<a  data-fancybox="grp{{ forloop.counter }}" href="{{bone.avers.url}}" data-caption="{{bone.title}}">
-							{% if bone.small %}
-								{% thumbnail bone.avers "180" crop="center" as im %}
+						<div class = "col">
+							{% if bone.avers %}
+							<a  data-fancybox="grp{{ forloop.counter }}" href="{{bone.avers.url}}" data-caption="{{bone.title}}">
+								{% thumbnail bone.avers bone.thumb_size crop="center" as im %}
 								<img class="mx-auto d-block" src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - аверс"/><br/>
 								{% endthumbnail %}
-							{% else %}
-								{% thumbnail bone.avers "280" crop="center" as im %}
-								<img class="mx-auto d-block" src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - аверс"/><br/>
-								{% endthumbnail %}
-							{% endif%}
-						</a>
-						{% endif %}
-					</div>
-					<div class = "col-xl-12">
-						{% if bone.revers %}
-						<a  data-fancybox="grp{{ forloop.counter }}" href="{{bone.revers.url}}" data-caption="{{bone.title}}">
-							{% if bone.small %}
-								{% thumbnail bone.revers "180" crop="center" as im %}
+							</a>
+							{% endif %}
+						</div>
+						<div class = "col">
+							{% if bone.revers %}
+							<a  data-fancybox="grp{{ forloop.counter }}" href="{{bone.revers.url}}" data-caption="{{bone.title}}">
+								{% thumbnail bone.revers bone.thumb_size crop="center" as im %}
 								<img class="mx-auto d-block" src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - реверс"/><br/>
 								{% endthumbnail %}
-							{% else %}
-								{% thumbnail bone.revers "280" crop="center" as im %}
-								<img class="mx-auto d-block" src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - реверс"/><br/>
-								{% endthumbnail %}
-							{% endif%}
-						</a>
-						{% endif %}
-					</div>
+							</a>
+							{% endif %}
+						</div>
 					{% else %}
-					<div class = "col-xl-6">
-						{% if bone.avers %}
-						<a  data-fancybox="grp{{ forloop.counter }}" href="{{bone.avers.url}}" data-caption="{{bone.title}}">
-							{% thumbnail bone.avers "180" crop="center" as im %}
-							<img class="mx-auto d-block" src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - аверс"/><br/>
-							{% endthumbnail %}
-						</a>
-						{% endif %}
-					</div>
-					<div class = "col-xl-6">
-						{% if bone.revers %}
-						<a  data-fancybox="grp{{ forloop.counter }}" href="{{bone.revers.url}}" data-caption="{{bone.title}}">
-							{% thumbnail bone.revers "180" crop="center" as im %}
-							<img class="mx-auto d-block" src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - реверс"/><br/>
-							{% endthumbnail %}
-						</a>
-						{% endif %}
-					</div>
+						<div class = "col">
+							{% if bone.avers %}
+							<a  data-fancybox="grp{{ forloop.counter }}" href="{{bone.avers.url}}" data-caption="{{bone.title}}">
+								{% thumbnail bone.avers bone.thumb_size crop="center" as im %}
+								<img class="mx-auto d-block" src="{{im.url}}" align="center" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - аверс"/><br/>
+								{% endthumbnail %}
+							</a>
+							{% endif %}
+						</div>
+						<div class = "col">
+							{% if bone.revers %}
+							<a  data-fancybox="grp{{ forloop.counter }}" href="{{bone.revers.url}}" data-caption="{{bone.title}}">
+								{% thumbnail bone.revers bone.thumb_size crop="center" as im %}
+								<img class="mx-auto d-block" src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{bone.title}} - реверс"/><br/>
+								{% endthumbnail %}
+							</a>
+							{% endif %}
+						</div>
 					{% endif %}
 				</div>
 			</div>
@@ -203,7 +189,6 @@ $("[data-fancybox]").fancybox({
 			</div>
 			{% endif %}
 		</div>
-	</div>
 	{% if cardnum == 'cL' %}
 	</div>
 	{% endif %}

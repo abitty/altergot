@@ -74,6 +74,11 @@ class Coin(models.Model):
 			if k == self.condition:
 				result = v
 		return result
+	def thumb_size(self):
+		if self.small:
+			return "80x80"
+		else:
+			return "120x120"
 	def do_search(self,request):
 		found_items = None
 		where = '' 
