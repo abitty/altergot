@@ -3,6 +3,11 @@ from django.utils import timezone
 from django.urls import reverse
 from sets.models import Collection
 import logging
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+import re
 
 
 #logger = logging.getlogger(coins.models)
@@ -10,6 +15,14 @@ logger = logging.getLogger(__name__)
 
 #def image_path(instance, filename):
 #    return os.path.join('uploads/coins/', str(instance.some_identifier),'/', 'filename.ext')
+
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+	if created:
+		Token.objects.create(user=instance)
+
 
 class Country(models.Model):
 	country = models.CharField("Страна", max_length=128, blank=False)
@@ -24,6 +37,19 @@ class Country(models.Model):
 			models.Index(fields=['country']),
 		]
 		
+	
+def normalize_query(query_string,
+    findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
+    normspace=re.compile(r'\s{2,}').sub):
+
+    '''
+    Splits the query string in invidual keywords, getting rid of unecessary spaces and grouping quoted words together.
+    Example:
+    >>> normalize_query('  some random  words "with   quotes  " and   spaces')
+        ['some', 'random', 'words', 'with quotes', 'and', 'spaces']
+    '''
+
+    return [normspace(' ',(t[0] or t[1]).strip()) for t in findterms(query_string)]	
 	
 	
 # Create your models here.
@@ -79,6 +105,19 @@ class Coin(models.Model):
 			return "80x80"
 		else:
 			return "120x120"
+	def expand_query(self, query):
+		print ("orig",query)
+		nq = normalize_query(query)
+		print ("norm",nq)
+		pfx = '';
+		res = ''
+		for q in nq:
+			res = pfx.join([res,"`comment` LIKE '%%{0}%%' OR `specific` LIKE '%%{0}%%'".format(q)])
+			pfx = ' OR '
+		if res:
+			res = "({})".format(res)
+		return res
+		
 	def do_search(self,request):
 		found_items = None
 		where = '' 
@@ -92,15 +131,16 @@ class Coin(models.Model):
 			empty_request = False
 			prefix = ' AND '
 	
-		sv = request.get('v','');
+		sv = request.get('v','')
 		if sv:
 			where = prefix.join([where,"`value` LIKE '"+sv+"%%'"])
 			empty_request = False
 			prefix = ' AND '
 		
-		sq = request.get('q','');
+		sq = request.get('q','')
 		if sq:
-			where = prefix.join([where,"(`comment` LIKE '%%"+sq+"%%' OR `specific` LIKE '%%"+sq+"%%')"])
+			where  = prefix.join([where,self.expand_query(self,sq)])
+			#where = prefix.join([where,"(`comment` LIKE '%%"+sq+"%%' OR `specific` LIKE '%%"+sq+"%%')"])
 			empty_request = False
 			prefix = ' AND '
 			
@@ -123,7 +163,6 @@ class Coin(models.Model):
 		cs = request.get('coll','')
 		if cs.isdigit():
 			coll = Collection.objects.get(id=cs)
-		print ("cs=",cs, " isdigit:",cs.isdigit(), " coll=",coll)
 		if coll:
 			where = prefix.join([where, '`owner_id`='+str(coll.owner_id)])
 			sql_str = "SELECT * FROM `coins_coin`"

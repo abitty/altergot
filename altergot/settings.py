@@ -92,6 +92,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 	'rest_framework',
+	'rest_framework.authtoken',
+	'rest_auth',
 	'sorl.thumbnail',
     'coins',
     'bones',
@@ -116,8 +118,15 @@ WSGI_APPLICATION = 'altergot.wsgi.application'
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAdminUser',
+		'rest_framework.permissions.IsAuthenticated',
     ],
-    'PAGE_SIZE': 10
+	'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
+	'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
+		'rest_framework.authentication.TokenAuthentication',
+    ),
 }
 
 
