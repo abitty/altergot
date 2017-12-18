@@ -12,24 +12,27 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+import json
+from django.core.exceptions import ImproperlyConfigured
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+with open(os.path.join(BASE_DIR, 'secrets.json')) as secrets_file:
+    secrets = json.load(secrets_file)
+
+def get_secret(setting, secrets=secrets):
+    """Get secret setting or fail with ImproperlyConfigured"""
+    try:
+        return secrets[setting]
+    except KeyError:
+        raise ImproperlyConfigured("Set the {} setting".format(setting))
+
 
 # путь до папки media, в общем случае она пуста в начале
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/' # для медии в шаблонах
 FILE_UPLOAD_PERMISSIONS = 0o644
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
-
 
 THUMBNAIL_FORMAT = 'JPEG'
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
@@ -72,7 +75,7 @@ STATICFILES_FINDERS = [
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'nq*ttx%pl^lw%tmlq$&tz&7qex2#)u(b=a+@re2gchi94sgooc'
+SECRET_KEY = get_secret("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -136,9 +139,9 @@ REST_FRAMEWORK = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-	'NAME': 'altergot_db',
-	'PASSWORD': 'RfhnsLtymub2Cndjkf',
-	'USER': 'altergot_user',
+	#'NAME': 'altergot_db',
+	#'PASSWORD': 'RfhnsLtymub2Cndjkf',
+	#'USER': 'altergot_user',
 	'CHARSET':'utf8',
 	'PORT':'3306',
 	'HOST':'localhost',

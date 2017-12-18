@@ -122,7 +122,6 @@ class Coin(models.Model):
 		found_items = None
 		where = '' 
 		empty_request = True
-		sy = '';
 		prefix = ' WHERE '
 			
 		sy = request.get('y','')
@@ -140,7 +139,6 @@ class Coin(models.Model):
 		sq = request.get('q','')
 		if sq:
 			where  = prefix.join([where,self.expand_query(self,sq)])
-			#where = prefix.join([where,"(`comment` LIKE '%%"+sq+"%%' OR `specific` LIKE '%%"+sq+"%%')"])
 			empty_request = False
 			prefix = ' AND '
 			
