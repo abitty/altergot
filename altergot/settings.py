@@ -139,9 +139,9 @@ REST_FRAMEWORK = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-	#'NAME': 'altergot_db',
-	#'PASSWORD': 'RfhnsLtymub2Cndjkf',
-	#'USER': 'altergot_user',
+	'NAME': get_secret("MYSQL_DB"),
+	'PASSWORD': get_secret("MYSQL_PASSWORD"),
+	'USER': get_secret("MYSQL_USER"),
 	'CHARSET':'utf8',
 	'PORT':'3306',
 	'HOST':'localhost',
