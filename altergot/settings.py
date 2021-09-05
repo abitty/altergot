@@ -33,6 +33,7 @@ def get_secret(setting, secrets=secrets):
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/' # для медии в шаблонах
 FILE_UPLOAD_PERMISSIONS = 0o644
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 THUMBNAIL_FORMAT = 'JPEG'
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
@@ -143,8 +144,8 @@ DATABASES = {
 	'PASSWORD': get_secret("MYSQL_PASSWORD"),
 	'USER': get_secret("MYSQL_USER"),
 	'CHARSET':'utf8',
-	'PORT':'3306',
-	'HOST':'localhost',
+	'PORT':get_secret("MYSQL_PORT"),
+	'HOST':'127.0.0.1',
 	'OPTIONS': {
 		#	'read_default_file': os.path.join(BASE_DIR,'altergot_mysql.conf'),
 			'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE'; SET storage_engine=INNODB",
@@ -193,7 +194,7 @@ LOGGING = {
 		'file': {
 			'level': 'DEBUG',
 			'class': 'logging.FileHandler',
-			'filename': '/home/www/altergot/logs/debug.log',
+			'filename': '/var/log/altergot_debug.log',
 		},
     },
 	'loggers': {

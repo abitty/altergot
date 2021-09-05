@@ -17,7 +17,7 @@ class Collection(models.Model):
 		return self.name
 		
 	def coll_by_kind(self,akind):
-		obj = Collection.objects.filter(kind=akind, public=True).order_by('name')
+		obj = Collection.objects.filter(kind=akind, public=True).order_by('name') # was Collection.objects.filter
 		return obj
 		
 	def url(self):
